@@ -7,6 +7,23 @@
 #include "IMU.h"
 #include <mbed-os/thisThread.cpp>
 #define PI 3.14159265
+#define LA_CONVERSION_FACTOR 0.01
+#define GYR_CONVERSION_DEG 0.0625
+
+// Registers
+#define LIA_Data_X_LSB 0x28 
+#define LIA_Data_Z_MSB 0x2D
+
+#define GYR_DATA_X_LSB 0x14
+#define GYR_DATA_Z_MSB 0x19
+
+#define OPERATING_MODE_REG 0x3D
+#define M_IMU 0x08
+#define M_COMPASS 0x09
+#define M_M4G 0x0A
+#define M_NDOF_FMC_OFF 0x0B
+#define M_NDOF 0x0C
+
 
 typedef struct{
     double yaw;
@@ -73,17 +90,18 @@ public:
 
 protected:
 
-    I2C *_i2c_p;
-    I2C &_i2c;
-    DigitalOut _res;   // working buffer
-    uint8_t  chip_addr;
-    int cantReadDataCount;    
+    I2C *_i2c_p;            // Pointer to I2C communication obj
+    I2C &_i2c;              // Reference to I2C communication obj
+    DigitalOut _res;        // working buffer 
+    uint8_t  chip_addr;     // IMU's chip address
+    int cantReadDataCount;       
     
 private:
 
-    char     dt[10];      // working buffer
-
+    char     dt[10];        // working buffer
     IMU::EulerAngles imuAngles;
+
+    
 
 };
 
